@@ -3,33 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ThreadingLib.Internal;
 
 namespace ThreadingLib
 {
-   internal class WorkItem
-   {
-      private readonly Action _a;
-      private readonly TaskCompletionSource<bool> _completed;
-
-      public Task Task => _completed.Task;
-
-      public WorkItem(Action a)
-      {
-         _a = a;
-         _completed = new TaskCompletionSource<bool>();
-      }
-
-      public void ProcessWorkItem()
-      {
-         _a?.Invoke(); // Null check in case someone queues a null action.
-         _completed.SetResult(true);
-      }
-   }
-
    public class ActionQueue
    {
-      private readonly Queue<WorkItem> _actionQueue =
-         new Queue<WorkItem>();
+      private readonly Queue<IWorkItem> _actionQueue =
+         new Queue<IWorkItem>();
 
       private readonly ManualResetEvent _mutex = new ManualResetEvent(false);
 
@@ -41,9 +22,9 @@ namespace ThreadingLib
          thread.Start();
       }
 
-      public Task QueueWorkItem(Action a)
+      public Task<T> QueueWorkItem<T>(Func<T> f)
       {
-         var workItem = new WorkItem(a);
+         var workItem = new WorkItem<T>(f);
 
          lock (_lock)
          {
@@ -55,11 +36,23 @@ namespace ThreadingLib
          return workItem.Task;
       }
 
+      public Task QueueWorkItem(Action a)
+      {
+         return QueueWorkItem(() =>
+         {
+            a();
+
+            // Return 0 means nothing - we have to return something in order to use
+            // the Func<T> overload above. This saves code repetition. 
+            return 0;
+         });
+      }
+
       private void ProceessWorkItems()
       {
          while (true)
          {
-            WorkItem result = null;
+            IWorkItem result = null;
             bool wasAny;
 
             lock (_lock)
