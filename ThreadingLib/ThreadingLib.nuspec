@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ThreadingLib</id>
+    <version>$version$</version>
+    <title>Threading Library</title>
+    <authors>Chris Powell</authors>
+    <owners>Chris Powell</owners>
+    <projectUrl>https://github.com/chrisp9/ThreadingLib</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A set of classes for making threading great again</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright (C) Chris Powell 2017</tags>
+  </metadata>
+  <files>
+	<file src="ThreadingLib\bin\$configuration$\ThreadingLib.dll" target="lib\net40\" />
+  </files>
+</package>
