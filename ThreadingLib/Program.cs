@@ -16,7 +16,7 @@ namespace ThreadingLib
 
          t = queue.QueueWorkItemAt(new DateTimeOffset(2017, 04, 16, 17, 21, 30, TimeSpan.Zero), () =>
          {
-            Console.WriteLine("Reaced");
+            Console.WriteLine("Reac ed");
          });
 
          t.Wait();
