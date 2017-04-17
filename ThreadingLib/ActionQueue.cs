@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ThreadingLib.Interfaces;
 using ThreadingLib.Internal;
 
 namespace ThreadingLib
 {
-   public class ActionQueue
+   public class ActionQueue : IActionQueue
    {
       private readonly Queue<IWorkItem> _actionQueue =
          new Queue<IWorkItem>();
@@ -44,8 +45,37 @@ namespace ThreadingLib
 
             // Return 0 means nothing - we have to return something in order to use
             // the Func<T> overload above. This saves code repetition. 
-            return 0;
+            return false;
          });
+      }
+
+      public Task QueueWorkItemAt(DateTimeOffset dateTime, Action a)
+      {
+         return QueueWorkItemAt(dateTime, () =>
+         {
+            a();
+            return true;
+         });
+      }
+
+      public Task<T> QueueWorkItemAt<T>(DateTimeOffset dateTime, Func<T> f)
+      {
+         var delayPeriod = dateTime - DateTimeOffset.UtcNow;
+
+         if (delayPeriod <= TimeSpan.Zero)
+         {
+            return QueueWorkItem(f);
+         }
+
+         var tcs = new TaskCompletionSource<T>();
+
+         Task.Delay(delayPeriod).ContinueWith(_ =>
+         {
+            var result = QueueWorkItem(f);
+            result.ContinueWith(v => tcs.SetResult(v.Result));
+         });
+
+         return tcs.Task;
       }
 
       private void ProceessWorkItems()

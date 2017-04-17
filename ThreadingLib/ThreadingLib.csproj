@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionQueue.cs" />
+    <Compile Include="Interfaces\IActionQueue.cs" />
+    <Compile Include="Internal\WorkItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
