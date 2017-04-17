@@ -64,6 +64,8 @@ namespace ThreadingLib
 
          if (delayPeriod <= TimeSpan.Zero)
          {
+            // If the scheduled time is before the current time, queue
+            // the work item immediately
             return QueueWorkItem(f);
          }
 
