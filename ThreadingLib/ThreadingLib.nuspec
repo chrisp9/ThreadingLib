@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A set of classes for making threading great again</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright (C) Chris Powell 2017</tags>
+    <copyright>Copyright (C) Chris Powell 2017</copyright>
   </metadata>
   <files>
 	<file src="ThreadingLib\bin\$configuration$\ThreadingLib.dll" target="lib\net40\" />
