@@ -13,6 +13,6 @@
     <copyright>Copyright (C) Chris Powell 2017</copyright>
   </metadata>
   <files>
-	<file src="ThreadingLib\bin\$configuration$\ThreadingLib.dll" target="lib\net40\" />
+	<file src="bin\$configuration$\ThreadingLib.dll" target="lib\net40\" />
   </files>
 </package>
